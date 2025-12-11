@@ -1,4 +1,4 @@
-package io.github.jacorycyjin.smartlibrary.backend.common.http;
+package io.github.jacorycyjin.smartlibrary.backend.common.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

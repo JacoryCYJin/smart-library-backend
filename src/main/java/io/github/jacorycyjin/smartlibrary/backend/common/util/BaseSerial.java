@@ -1,4 +1,4 @@
-package io.github.jacorycyjin.smartlibrary.backend.common.exception;
+package io.github.jacorycyjin.smartlibrary.backend.common.util;
 
 import java.io.Serial;
 import java.io.Serializable;

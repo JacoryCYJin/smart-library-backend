@@ -1,4 +1,4 @@
-package io.github.jacorycyjin.smartlibrary.backend.common;
+package io.github.jacorycyjin.smartlibrary.backend.common.enums;
 
 /**
  * @author Jacory

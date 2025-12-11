@@ -1,8 +1,8 @@
-package io.github.jacorycyjin.smartlibrary.backend.util;
+package io.github.jacorycyjin.smartlibrary.backend.common.util;
 
 import org.springframework.util.StringUtils;
 import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
-import io.github.jacorycyjin.smartlibrary.backend.common.http.BusinessException;
+import io.github.jacorycyjin.smartlibrary.backend.common.exception.BusinessException;
 
 /**
  * @author Jacory
