@@ -9,7 +9,6 @@ import io.github.jacorycyjin.smartlibrary.backend.common.util.ValidationUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
 
 /**
@@ -21,6 +20,12 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
+    /**
+     * 根据手机号或邮箱查找用户
+     * 
+     * @param phoneOrEmail
+     * @return UserDTO
+     */
     @Override
     public UserDTO findUserByPhoneOrEmail(String phoneOrEmail) {
 
@@ -33,10 +38,26 @@ public class UserServiceImpl implements UserService {
         } else {
             params.put("phone", phoneOrEmail);
         }
-        List<User> users = userMapper.findUser(params);
-        if (users.isEmpty()) {
+        User user = userMapper.findUser(params).get(0);
+        if (user == null) {
             return null;
         }
-        return UserDTO.fromEntity(users.get(0));
+        return UserDTO.fromEntity(user);
+    }
+
+    /**
+     * 登录
+     * 
+     * @param phoneOrEmail
+     * @param password
+     * @return 是否登录成功
+     */
+    @Override
+    public Boolean login(String phoneOrEmail, String password) {
+        UserDTO userDTO = findUserByPhoneOrEmail(phoneOrEmail);
+        if (userDTO == null) {
+            return false;
+        }
+        return userDTO.getPassword().equals(password);
     }
 }
