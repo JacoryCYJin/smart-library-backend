@@ -1,4 +1,4 @@
-package io.github.jacorycyjin.smartlibrary.backend.common.form;
+package io.github.jacorycyjin.smartlibrary.backend.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Jacory
- * @date 2025/12/12
+ * @date 2025/12/13
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginForm {
+public class RegisterForm {
 
     /**
      * 手机号或邮箱
@@ -23,4 +24,8 @@ public class LoginForm {
      */
     private String password;
 
+    /**
+     * 确认密码
+     */
+    private String confirmPassword;
 }

@@ -11,5 +11,20 @@ import java.util.Map;
  */
 @Mapper
 public interface UserMapper {
+
+    /**
+     * 查询用户
+     * 
+     * @param params
+     * @return 用户列表
+     */
     List<User> findUser(Map<String, Object> params);
+
+    /**
+     * 插入用户
+     * 
+     * @param user
+     * @return 是否插入成功
+     */
+    int insertUser(User user);
 }

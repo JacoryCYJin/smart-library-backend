@@ -50,4 +50,10 @@
         </if>
     </select>
 
+    <!-- 插入用户 -->
+    <insert id="insertUser" parameterType="io.github.jacorycyjin.smartlibrary.backend.entity.User">
+        INSERT INTO user (user_id, username, password, phone, email, avatar_url, role, bio, status, ctime, mtime, deleted)
+        VALUES (#{userId}, #{username}, #{password}, #{phone}, #{email}, #{avatarUrl}, #{role}, #{bio}, #{status}, #{ctime}, #{mtime}, #{deleted})
+    </insert>
+
 </mapper>

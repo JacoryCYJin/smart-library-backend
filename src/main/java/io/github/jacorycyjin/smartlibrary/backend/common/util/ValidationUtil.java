@@ -13,6 +13,7 @@ public class ValidationUtil {
     // 正则表达式常量
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String PHONE_REGEX = "^1[3-9]\\d{9}$";
+    private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$";
 
     private ValidationUtil() {
         // 私有构造器，防止实例化
@@ -54,6 +55,19 @@ public class ValidationUtil {
         validateNotEmpty(phone, "手机号");
         if (!phone.matches(PHONE_REGEX)) {
             throw new BusinessException(ApiCode.PARAM_INVALID.getCode(), "手机号格式不正确");
+        }
+    }
+
+    /** 
+     * 验证密码格式
+     * 
+     * @param password 密码
+     * @throws BusinessException 密码格式错误时抛出异常
+     */
+    public static void validatePasswordFormat(String password) {
+        validateNotEmpty(password, "密码");
+        if (!password.matches(PASSWORD_REGEX)) {
+            throw new BusinessException(ApiCode.PARAM_INVALID.getCode(), "密码格式错误");
         }
     }
 

@@ -3,7 +3,7 @@ package io.github.jacorycyjin.smartlibrary.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import lombok.Builder;
 import java.time.LocalDateTime;
 
 /**
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Builder
 public class User {
 
     /**
@@ -54,7 +55,7 @@ public class User {
     /**
      * 用户角色
      */
-    private String role;
+    private Integer role;
 
     /**
      * 用户简介

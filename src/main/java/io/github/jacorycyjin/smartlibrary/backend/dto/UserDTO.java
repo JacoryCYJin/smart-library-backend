@@ -51,7 +51,7 @@ public class UserDTO {
     /**
      * 用户角色
      */
-    private String role;
+    private Integer role;
 
     /**
      * 用户简介

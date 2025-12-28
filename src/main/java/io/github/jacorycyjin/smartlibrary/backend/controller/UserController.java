@@ -5,15 +5,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.jacorycyjin.smartlibrary.backend.service.UserService;
 import io.github.jacorycyjin.smartlibrary.backend.dto.UserDTO;
+import io.github.jacorycyjin.smartlibrary.backend.form.LoginForm;
+import io.github.jacorycyjin.smartlibrary.backend.form.RegisterForm;
+import io.github.jacorycyjin.smartlibrary.backend.form.UserSearchForm;
 import io.github.jacorycyjin.smartlibrary.backend.common.response.Result;
 import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import io.github.jacorycyjin.smartlibrary.backend.vo.UserVO;
-import io.github.jacorycyjin.smartlibrary.backend.common.form.LoginForm;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import java.util.List;
 
 /**
  * @author Jacory
@@ -27,18 +28,21 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 根据手机号或邮箱查找用户
+     * 搜索用户（支持多条件查询）
      * 
-     * @param phoneOrEmail
-     * @return UserVO
+     * @param searchForm 查询条件
+     * @return 用户列表
      */
-    @GetMapping("/find-user-by-phone-or-email")
-    public Result<UserVO> findUserByPhoneOrEmail(@RequestParam String phoneOrEmail) {
-        UserDTO userDTO = userService.findUserByPhoneOrEmail(phoneOrEmail);
-        if (userDTO == null) {
-            return Result.fail(ApiCode.PARAM_INVALID.getCode(), "用户不存在");
+    @PostMapping("/search")
+    public Result<List<UserVO>> searchUsers(@RequestBody UserSearchForm searchForm) {
+        List<UserDTO> userDTOs = userService.searchUsers(searchForm);
+        if (userDTOs == null || userDTOs.isEmpty()) {
+            return Result.fail(ApiCode.PARAM_INVALID.getCode(), "未找到符合条件的用户");
         }
-        return Result.success(UserVO.fromDTO(userDTO));
+        List<UserVO> userVOs = userDTOs.stream()
+                .map(UserVO::fromDTO)
+                .toList();
+        return Result.success(userVOs);
     }
 
     /**
@@ -52,6 +56,21 @@ public class UserController {
         Boolean isLogin = userService.login(loginForm.getPhoneOrEmail(), loginForm.getPassword());
         if (!isLogin) {
             return Result.fail(ApiCode.PARAM_INVALID.getCode(), "用户/密码错误");
+        }
+        return Result.success();
+    }
+
+    /**
+     * 注册
+     * 
+     * @param registerForm
+     * @return 是否注册成功
+     */
+    @PostMapping("/register")
+    public Result<Boolean> register(@RequestBody RegisterForm registerForm) {
+        Boolean isRegister = userService.register(registerForm.getPhoneOrEmail(), registerForm.getPassword(), registerForm.getConfirmPassword());
+        if (!isRegister) {
+            return Result.fail(ApiCode.PARAM_INVALID.getCode(), "注册失败");
         }
         return Result.success();
     }
