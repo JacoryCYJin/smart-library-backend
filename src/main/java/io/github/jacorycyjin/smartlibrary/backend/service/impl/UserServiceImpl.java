@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
         searchForm.setPhoneOrEmail(phoneOrEmail);
         searchForm.setDeleted(0);
         searchForm.setLimit(1);
-        
+
         List<UserDTO> users = searchUsers(searchForm);
         if (users == null || users.isEmpty()) {
             return false;
         }
-        
+
         UserDTO userDTO = users.get(0);
         return userDTO.getPassword().equals(password);
     }
@@ -68,13 +68,13 @@ public class UserServiceImpl implements UserService {
         if (!password.equals(confirmPassword)) {
             throw new BusinessException(ApiCode.PARAM_INVALID.getCode(), "两次输入的密码不一致");
         }
-        
+
         // 使用 searchUsers 方法检查用户是否已存在
         UserSearchForm searchForm = new UserSearchForm();
         searchForm.setPhoneOrEmail(phoneOrEmail);
         searchForm.setDeleted(0);
         searchForm.setLimit(1);
-        
+
         List<UserDTO> existingUsers = searchUsers(searchForm);
         if (existingUsers != null && !existingUsers.isEmpty()) {
             if (ValidationUtil.validatePhoneOrEmailFormat(phoneOrEmail)) {
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> searchUsers(UserSearchForm searchReq) {
         Map<String, Object> params = new HashMap<>();
-        
+
         // 处理 phoneOrEmail 参数
         if (searchReq.getPhoneOrEmail() != null && !searchReq.getPhoneOrEmail().isEmpty()) {
             if (ValidationUtil.validatePhoneOrEmailFormat(searchReq.getPhoneOrEmail())) {
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
                 params.put("phone", searchReq.getPhoneOrEmail());
             }
         }
-        
+
         // 添加其他查询参数
         if (searchReq.getUserId() != null && !searchReq.getUserId().isEmpty()) {
             params.put("userId", searchReq.getUserId());
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
         if (searchReq.getLimit() != null && searchReq.getLimit() > 0) {
             params.put("limit", searchReq.getLimit());
         }
-        
+
         List<User> users = userMapper.findUser(params);
         return users.stream()
                 .map(UserDTO::fromEntity)

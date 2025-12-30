@@ -11,7 +11,7 @@ import io.github.jacorycyjin.smartlibrary.backend.form.UserSearchForm;
 import io.github.jacorycyjin.smartlibrary.backend.common.response.Result;
 import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
 import jakarta.annotation.Resource;
-import io.github.jacorycyjin.smartlibrary.backend.vo.UserVO;
+import io.github.jacorycyjin.smartlibrary.backend.vo.UserPublicVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
@@ -34,13 +34,13 @@ public class UserController {
      * @return 用户列表
      */
     @PostMapping("/search")
-    public Result<List<UserVO>> searchUsers(@RequestBody UserSearchForm searchForm) {
+    public Result<List<UserPublicVO>> searchUsers(@RequestBody UserSearchForm searchForm) {
         List<UserDTO> userDTOs = userService.searchUsers(searchForm);
         if (userDTOs == null || userDTOs.isEmpty()) {
             return Result.fail(ApiCode.PARAM_INVALID.getCode(), "未找到符合条件的用户");
         }
-        List<UserVO> userVOs = userDTOs.stream()
-                .map(UserVO::fromDTO)
+        List<UserPublicVO> userVOs = userDTOs.stream()
+                .map(UserPublicVO::fromDTO)
                 .toList();
         return Result.success(userVOs);
     }

@@ -59,6 +59,11 @@ public class UserDTO {
     private String bio;
 
     /**
+     * 用户状态：1=正常，0=禁用
+     */
+    private Integer status;
+
+    /**
      * 注册时间
      */
     private LocalDateTime ctime;
@@ -67,6 +72,11 @@ public class UserDTO {
      * 更新时间
      */
     private LocalDateTime mtime;
+
+    /**
+     * 是否删除：0=未删除，1=已删除
+     */
+    private Integer deleted;
 
     public static UserDTO fromEntity(User user) {
         if (user == null) {
@@ -81,8 +91,10 @@ public class UserDTO {
                 .avatarUrl(user.getAvatarUrl())
                 .role(user.getRole())
                 .bio(user.getBio())
+                .status(user.getStatus())
                 .ctime(user.getCtime())
                 .mtime(user.getMtime())
+                .deleted(user.getDeleted())
                 .build();
     }
 }
