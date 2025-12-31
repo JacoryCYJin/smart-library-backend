@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.jacorycyjin.smartlibrary.backend.mapper.CategoryMapper">
+
+    <!-- 分类结果映射 -->
+    <resultMap id="CategoryResultMap" type="io.github.jacorycyjin.smartlibrary.backend.entity.Category">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="parent_category_id" property="parentCategoryId"/>
+        <result column="name" property="name"/>
+        <result column="level" property="level"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="ctime" property="ctime"/>
+        <result column="mtime" property="mtime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 根据业务ID批量查询分类 -->
+    <select id="selectByCategoryIds" resultMap="CategoryResultMap">
+        SELECT *
+        FROM category
+        WHERE category_id IN
+        <foreach collection="categoryIds" item="categoryId" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+        AND deleted = 0
+    </select>
+</mapper>

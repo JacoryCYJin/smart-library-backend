@@ -18,7 +18,7 @@ public interface UserMapper {
      * @param params
      * @return 用户列表
      */
-    List<User> findUser(Map<String, Object> params);
+    List<User> searchUser(Map<String, Object> params);
 
     /**
      * 插入用户

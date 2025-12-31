@@ -36,5 +36,5 @@ public interface UserService {
      * @param searchReq
      * @return 用户列表
      */
-    List<UserDTO> searchUsers(UserSearchForm searchReq);
+    List<UserDTO> searchUser(UserSearchForm searchReq);
 }

@@ -20,7 +20,7 @@
     </resultMap>
 
     <!-- 查询用户 -->
-    <select id="findUser" parameterType="map" resultMap="UserResultMap">SELECT id, user_id,
+    <select id="searchUser" parameterType="map" resultMap="UserResultMap">SELECT id, user_id,
         username, password, phone, email, avatar_url, role, bio, status, ctime, mtime, deleted FROM
         user
         <where>

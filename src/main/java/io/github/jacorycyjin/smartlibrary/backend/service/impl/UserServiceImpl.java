@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         searchForm.setDeleted(0);
         searchForm.setLimit(1);
 
-        List<UserDTO> users = searchUsers(searchForm);
+        List<UserDTO> users = searchUser(searchForm);
         if (users == null || users.isEmpty()) {
             return false;
         }
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         searchForm.setDeleted(0);
         searchForm.setLimit(1);
 
-        List<UserDTO> existingUsers = searchUsers(searchForm);
+        List<UserDTO> existingUsers = searchUser(searchForm);
         if (existingUsers != null && !existingUsers.isEmpty()) {
             if (ValidationUtil.validatePhoneOrEmailFormat(phoneOrEmail)) {
                 throw new BusinessException(ApiCode.PARAM_INVALID.getCode(), "该邮箱已被注册");
@@ -103,52 +103,52 @@ public class UserServiceImpl implements UserService {
     /**
      * 搜索用户（支持多条件查询）
      *
-     * @param searchReq
+     * @param searchForm 查询条件
      * @return 用户列表
      */
     @Override
-    public List<UserDTO> searchUsers(UserSearchForm searchReq) {
+    public List<UserDTO> searchUser(UserSearchForm searchForm) {
         Map<String, Object> params = new HashMap<>();
 
         // 处理 phoneOrEmail 参数
-        if (searchReq.getPhoneOrEmail() != null && !searchReq.getPhoneOrEmail().isEmpty()) {
-            if (ValidationUtil.validatePhoneOrEmailFormat(searchReq.getPhoneOrEmail())) {
-                params.put("email", searchReq.getPhoneOrEmail());
+        if (searchForm.getPhoneOrEmail() != null && !searchForm.getPhoneOrEmail().isEmpty()) {
+            if (ValidationUtil.validatePhoneOrEmailFormat(searchForm.getPhoneOrEmail())) {
+                params.put("email", searchForm.getPhoneOrEmail());
             } else {
-                params.put("phone", searchReq.getPhoneOrEmail());
+                params.put("phone", searchForm.getPhoneOrEmail());
             }
         }
 
         // 添加其他查询参数
-        if (searchReq.getUserId() != null && !searchReq.getUserId().isEmpty()) {
-            params.put("userId", searchReq.getUserId());
+        if (searchForm.getUserId() != null && !searchForm.getUserId().isEmpty()) {
+            params.put("userId", searchForm.getUserId());
         }
-        if (searchReq.getUsername() != null && !searchReq.getUsername().isEmpty()) {
-            params.put("username", searchReq.getUsername());
+        if (searchForm.getUsername() != null && !searchForm.getUsername().isEmpty()) {
+            params.put("username", searchForm.getUsername());
         }
-        if (searchReq.getPhone() != null && !searchReq.getPhone().isEmpty()) {
-            params.put("phone", searchReq.getPhone());
+        if (searchForm.getPhone() != null && !searchForm.getPhone().isEmpty()) {
+            params.put("phone", searchForm.getPhone());
         }
-        if (searchReq.getEmail() != null && !searchReq.getEmail().isEmpty()) {
-            params.put("email", searchReq.getEmail());
+        if (searchForm.getEmail() != null && !searchForm.getEmail().isEmpty()) {
+            params.put("email", searchForm.getEmail());
         }
-        if (searchReq.getRole() != null) {
-            params.put("role", searchReq.getRole());
+        if (searchForm.getRole() != null) {
+            params.put("role", searchForm.getRole());
         }
-        if (searchReq.getStatus() != null) {
-            params.put("status", searchReq.getStatus());
+        if (searchForm.getStatus() != null) {
+            params.put("status", searchForm.getStatus());
         }
-        if (searchReq.getDeleted() != null) {
-            params.put("deleted", searchReq.getDeleted());
+        if (searchForm.getDeleted() != null) {
+            params.put("deleted", searchForm.getDeleted());
         } else {
             // 默认只查询未删除的用户
             params.put("deleted", 0);
         }
-        if (searchReq.getLimit() != null && searchReq.getLimit() > 0) {
-            params.put("limit", searchReq.getLimit());
+        if (searchForm.getLimit() != null && searchForm.getLimit() > 0) {
+            params.put("limit", searchForm.getLimit());
         }
 
-        List<User> users = userMapper.findUser(params);
+        List<User> users = userMapper.searchUser(params);
         return users.stream()
                 .map(UserDTO::fromEntity)
                 .collect(Collectors.toList());

@@ -34,8 +34,8 @@ public class UserController {
      * @return 用户列表
      */
     @PostMapping("/search")
-    public Result<List<UserPublicVO>> searchUsers(@RequestBody UserSearchForm searchForm) {
-        List<UserDTO> userDTOs = userService.searchUsers(searchForm);
+    public Result<List<UserPublicVO>> searchUser(@RequestBody UserSearchForm searchForm) {
+        List<UserDTO> userDTOs = userService.searchUser(searchForm);
         if (userDTOs == null || userDTOs.isEmpty()) {
             return Result.fail(ApiCode.PARAM_INVALID.getCode(), "未找到符合条件的用户");
         }
