@@ -82,4 +82,12 @@
             LIMIT #{limit}
         </if>
     </select>
+
+    <!-- 根据图书业务ID查询单本图书 -->
+    <select id="selectByBookId" resultMap="BookResultMap">
+        SELECT *
+        FROM book
+        WHERE book_id = #{bookId}
+          AND deleted = 0
+    </select>
 </mapper>

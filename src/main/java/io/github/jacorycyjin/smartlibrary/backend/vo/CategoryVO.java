@@ -1,6 +1,7 @@
 package io.github.jacorycyjin.smartlibrary.backend.vo;
 
 import io.github.jacorycyjin.smartlibrary.backend.dto.CategoryDTO;
+import io.github.jacorycyjin.smartlibrary.backend.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -70,6 +71,24 @@ public class CategoryVO {
                 .sortOrder(dto.getSortOrder())
                 .ctime(dto.getCtime())
                 .mtime(dto.getMtime())
+                .build();
+    }
+
+    /**
+     * 从实体类转换为 VO
+     */
+    public static CategoryVO fromEntity(Category entity) {
+        if (entity == null) {
+            return null;
+        }
+        return CategoryVO.builder()
+                .categoryId(entity.getCategoryId())
+                .parentCategoryId(entity.getParentCategoryId())
+                .name(entity.getName())
+                .level(entity.getLevel())
+                .sortOrder(entity.getSortOrder())
+                .ctime(entity.getCtime())
+                .mtime(entity.getMtime())
                 .build();
     }
 }

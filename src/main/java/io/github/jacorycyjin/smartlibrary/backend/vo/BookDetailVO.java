@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 图书信息详情 VO（详情页/管理用）
@@ -54,4 +55,15 @@ public class BookDetailVO extends BookPublicVO {
      * 更新时间
      */
     private LocalDateTime mtime;
+
+    /**
+     * 完整分类层级路径（从根到叶子）
+     * 例如：["计算机", "编程语言", "Java"]
+     */
+    private List<CategoryVO> categoryPath;
+
+    /**
+     * 所有标签列表（不限制数量）
+     */
+    private List<TagSimpleVO> allTags;
 }

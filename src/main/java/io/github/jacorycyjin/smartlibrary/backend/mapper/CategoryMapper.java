@@ -21,4 +21,12 @@ public interface CategoryMapper {
      * @return 分类列表
      */
     List<Category> selectByCategoryIds(@Param("categoryIds") List<String> categoryIds);
+
+    /**
+     * 根据分类业务ID查询单个分类
+     * 
+     * @param categoryId 分类业务ID
+     * @return 分类信息
+     */
+    Category selectByCategoryId(@Param("categoryId") String categoryId);
 }

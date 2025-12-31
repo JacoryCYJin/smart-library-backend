@@ -7,12 +7,22 @@ import io.github.jacorycyjin.smartlibrary.backend.mapper.BookMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.CategoryMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.TagMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.BookCategoryRelMapper;
+import io.github.jacorycyjin.smartlibrary.backend.mapper.CommentMapper;
+import io.github.jacorycyjin.smartlibrary.backend.mapper.UserMapper;
 import io.github.jacorycyjin.smartlibrary.backend.entity.Book;
 import io.github.jacorycyjin.smartlibrary.backend.entity.Category;
+import io.github.jacorycyjin.smartlibrary.backend.entity.Comment;
+import io.github.jacorycyjin.smartlibrary.backend.entity.User;
 import io.github.jacorycyjin.smartlibrary.backend.bo.BookBO;
 import io.github.jacorycyjin.smartlibrary.backend.form.BookSearchForm;
 import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageDTO;
 import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageQueryDTO;
+import io.github.jacorycyjin.smartlibrary.backend.vo.BookDetailVO;
+import io.github.jacorycyjin.smartlibrary.backend.vo.CategoryVO;
+import io.github.jacorycyjin.smartlibrary.backend.vo.CommentVO;
+import io.github.jacorycyjin.smartlibrary.backend.common.exception.BusinessException;
+import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
+import io.github.jacorycyjin.smartlibrary.backend.converter.BookConverter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.List;
@@ -22,7 +32,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * 图书服务实现（方案 3：Mapper 各回各家 + Service 组装）
+ * 图书服务实现
  * 
  * @author Jacory
  * @date 2025/12/31
@@ -42,18 +52,24 @@ public class BookServiceImpl implements BookService {
     @Resource
     private BookCategoryRelMapper bookCategoryRelMapper;
 
+    @Resource
+    private CommentMapper commentMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
     @Override
     public PageDTO<BookBO> searchBook(BookSearchForm searchForm) {
         // 1. 转换并校验分页参数
         PageQueryDTO pageQuery = searchForm.toPageQueryDTO();
-        
+
         // 2. 构建查询参数
         Map<String, Object> params = buildSearchParams(searchForm);
 
         // 3. 根据 fetchAll 决定是否启动分页
         List<Book> books;
         int totalCount;
-        
+
         if (pageQuery.isFetchAll()) {
             // 查询所有数据，不分页
             books = bookMapper.searchBook(params);
@@ -65,7 +81,7 @@ public class BookServiceImpl implements BookService {
             PageInfo<Book> pageInfo = new PageInfo<>(books);
             totalCount = (int) pageInfo.getTotal();
         }
-        
+
         if (books == null || books.isEmpty()) {
             return new PageDTO<>(pageQuery.getPageNum(), 0, pageQuery.getPageSize(), new ArrayList<>());
         }
@@ -75,16 +91,16 @@ public class BookServiceImpl implements BookService {
                 .map(Book::getBookId)
                 .collect(Collectors.toList());
 
-        // 6. 批量查询图书-分类关联（BookCategoryRelMapper 负责关联表）
+        // 6. 批量查询图书-分类关联
         List<Map<String, Object>> bookCategoryRelList = bookCategoryRelMapper.selectByBookIds(bookIds);
 
-        // 提取分类业务ID列表（category_id 字段存储的是业务ID）
+        // 提取分类业务ID列表
         List<String> categoryIds = bookCategoryRelList.stream()
                 .map(rel -> (String) rel.get("categoryId"))
                 .distinct()
                 .collect(Collectors.toList());
 
-        // 7. 批量查询分类信息（CategoryMapper 负责 Category 表，使用业务ID查询）
+        // 7. 批量查询分类信息
         Map<String, Category> categoryMap = new HashMap<>();
         if (!categoryIds.isEmpty()) {
             List<Category> categories = categoryMapper.selectByCategoryIds(categoryIds);
@@ -103,18 +119,89 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        // 9. 批量查询标签信息（TagMapper 负责 Tag 表和关联表）
+        // 9. 批量查询标签信息
         List<Map<String, Object>> tagList = tagMapper.selectTagsByBookIds(bookIds);
         Map<String, List<Map<String, Object>>> tagMap = tagList.stream()
                 .collect(Collectors.groupingBy(m -> (String) m.get("bookId")));
 
-        // 10. 组装数据：Book + Category + Tags -> BookBO（使用业务ID）
+        // 10. 组装数据：Book + Category + Tags -> BookBO（使用转换器）
         List<BookBO> bookBOs = books.stream()
-                .map(book -> assembleBookBO(book, bookToCategoryMap.get(book.getBookId()), tagMap.get(book.getBookId())))
+                .map(book -> BookConverter.toBookBO(
+                        book,
+                        bookToCategoryMap.get(book.getBookId()),
+                        tagMap.get(book.getBookId())))
                 .collect(Collectors.toList());
-        
+
         // 11. 返回分页结果
         return new PageDTO<>(pageQuery.getPageNum(), totalCount, pageQuery.getPageSize(), bookBOs);
+    }
+
+    @Override
+    public BookDetailVO getBookDetail(String bookId) {
+        // 1. 查询图书基本信息
+        Book book = bookMapper.selectByBookId(bookId);
+        if (book == null) {
+            throw new BusinessException(ApiCode.BOOK_NOT_FOUND.getCode(), ApiCode.BOOK_NOT_FOUND.getMessage());
+        }
+
+        // 2. 查询图书的分类ID
+        List<Map<String, Object>> bookCategoryRelList = bookCategoryRelMapper.selectByBookIds(List.of(bookId));
+        String categoryId = null;
+        if (!bookCategoryRelList.isEmpty()) {
+            categoryId = (String) bookCategoryRelList.get(0).get("categoryId");
+        }
+
+        // 3. 构建分类层级路径（从根到叶子）
+        List<CategoryVO> categoryPath = new ArrayList<>();
+        if (categoryId != null) {
+            Category leafCategory = categoryMapper.selectByCategoryId(categoryId);
+            if (leafCategory != null) {
+                categoryPath = BookConverter.buildCategoryPath(leafCategory, categoryMapper::selectByCategoryId);
+            }
+        }
+
+        // 4. 查询所有标签
+        List<Map<String, Object>> tagList = tagMapper.selectTagsByBookIds(List.of(bookId));
+
+        // 5. 组装 BookDetailVO（使用转换器）
+        return BookConverter.toBookDetailVO(book, categoryPath, tagList);
+    }
+
+    @Override
+    public PageDTO<CommentVO> getBookComments(String bookId, Integer pageNum, Integer pageSize) {
+        // 1. 设置默认分页参数
+        if (pageNum == null || pageNum < 1) {
+            pageNum = 1;
+        }
+        if (pageSize == null || pageSize < 1) {
+            pageSize = 10;
+        }
+
+        // 2. 启动分页查询评论
+        PageHelper.startPage(pageNum, pageSize);
+        List<Comment> comments = commentMapper.selectByBookId(bookId);
+        PageInfo<Comment> pageInfo = new PageInfo<>(comments);
+
+        if (comments.isEmpty()) {
+            return new PageDTO<>(pageNum, 0, pageSize, new ArrayList<>());
+        }
+
+        // 3. 提取用户ID列表
+        List<String> userIds = comments.stream()
+                .map(Comment::getUserId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 4. 批量查询用户信息
+        List<User> users = userMapper.selectByUserIds(userIds);
+        Map<String, User> userMap = users.stream()
+                .collect(Collectors.toMap(User::getUserId, u -> u));
+
+        // 5. 组装 CommentVO（使用转换器）
+        List<CommentVO> commentVOs = BookConverter.toCommentVOList(comments, userMap);
+
+        // 6. 返回分页结果
+        return new PageDTO<>(pageNum, (int) pageInfo.getTotal(), pageSize, commentVOs);
     }
 
     /**
@@ -155,50 +242,5 @@ public class BookServiceImpl implements BookService {
         }
 
         return params;
-    }
-
-    /**
-     * 组装 BookBO
-     */
-    private BookBO assembleBookBO(Book book, Category category, List<Map<String, Object>> tags) {
-        BookBO bo = BookBO.builder()
-                .bookId(book.getBookId())
-                .isbn(book.getIsbn())
-                .title(book.getTitle())
-                .subTitle(book.getSubTitle())
-                .authorName(book.getAuthorName())
-                .publisher(book.getPublisher())
-                .pubDate(book.getPubDate())
-                .price(book.getPrice())
-                .pageCount(book.getPageCount())
-                .coverUrl(book.getCoverUrl())
-                .summary(book.getSummary())
-                .sourceOrigin(book.getSourceOrigin())
-                .sourceUrl(book.getSourceUrl())
-                .sourceScore(book.getSourceScore())
-                .sentimentScore(book.getSentimentScore())
-                .ctime(book.getCtime())
-                .mtime(book.getMtime())
-                .build();
-
-        // 设置分类信息
-        if (category != null) {
-            bo.setCategoryId(category.getCategoryId());
-            bo.setCategoryName(category.getName());
-        }
-
-        // 设置标签列表
-        if (tags != null && !tags.isEmpty()) {
-            List<BookBO.TagSimpleDTO> tagDTOs = tags.stream()
-                    .map(tag -> BookBO.TagSimpleDTO.builder()
-                            .tagId((String) tag.get("tagId"))
-                            .name((String) tag.get("tagName"))
-                            .type((Integer) tag.get("tagType"))
-                            .build())
-                    .collect(Collectors.toList());
-            bo.setTags(tagDTOs);
-        }
-
-        return bo;
     }
 }

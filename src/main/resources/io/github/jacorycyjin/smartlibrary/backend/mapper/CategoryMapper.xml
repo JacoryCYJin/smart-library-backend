@@ -25,4 +25,12 @@
         </foreach>
         AND deleted = 0
     </select>
+
+    <!-- 根据分类业务ID查询单个分类 -->
+    <select id="selectByCategoryId" resultMap="CategoryResultMap">
+        SELECT *
+        FROM category
+        WHERE category_id = #{categoryId}
+          AND deleted = 0
+    </select>
 </mapper>

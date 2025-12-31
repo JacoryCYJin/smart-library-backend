@@ -1,6 +1,8 @@
 package io.github.jacorycyjin.smartlibrary.backend.vo;
 
 import io.github.jacorycyjin.smartlibrary.backend.dto.CommentDTO;
+import io.github.jacorycyjin.smartlibrary.backend.entity.Comment;
+import io.github.jacorycyjin.smartlibrary.backend.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +27,16 @@ public class CommentVO {
      * 用户ID
      */
     private String userId;
+
+    /**
+     * 用户昵称
+     */
+    private String username;
+
+    /**
+     * 用户头像URL
+     */
+    private String avatarUrl;
 
     /**
      * 图书ID
@@ -83,6 +95,48 @@ public class CommentVO {
                 .rejectionReason(dto.getRejectionReason())
                 .ctime(dto.getCtime())
                 .mtime(dto.getMtime())
+                .build();
+    }
+
+    /**
+     * 从实体类转换为 VO（不包含用户信息）
+     */
+    public static CommentVO fromEntity(Comment entity) {
+        if (entity == null) {
+            return null;
+        }
+        return CommentVO.builder()
+                .userId(entity.getUserId())
+                .bookId(entity.getBookId())
+                .content(entity.getContent())
+                .score(entity.getScore())
+                .likeCount(entity.getLikeCount())
+                .auditStatus(entity.getAuditStatus())
+                .rejectionReason(entity.getRejectionReason())
+                .ctime(entity.getCtime())
+                .mtime(entity.getMtime())
+                .build();
+    }
+
+    /**
+     * 从实体类转换为 VO（包含用户信息）
+     */
+    public static CommentVO fromEntityWithUser(Comment comment, User user) {
+        if (comment == null) {
+            return null;
+        }
+        return CommentVO.builder()
+                .userId(comment.getUserId())
+                .username(user != null ? user.getUsername() : "未知用户")
+                .avatarUrl(user != null ? user.getAvatarUrl() : null)
+                .bookId(comment.getBookId())
+                .content(comment.getContent())
+                .score(comment.getScore())
+                .likeCount(comment.getLikeCount())
+                .auditStatus(comment.getAuditStatus())
+                .rejectionReason(comment.getRejectionReason())
+                .ctime(comment.getCtime())
+                .mtime(comment.getMtime())
                 .build();
     }
 }
