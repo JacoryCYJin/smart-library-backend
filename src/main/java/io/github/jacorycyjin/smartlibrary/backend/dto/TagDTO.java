@@ -60,4 +60,18 @@ public class TagDTO {
                 .mtime(tag.getMtime())
                 .build();
     }
+
+    /**
+     * 从 Map 转换为 DTO（用于 MyBatis 查询结果）
+     */
+    public static TagDTO fromMap(java.util.Map<String, Object> map) {
+        if (map == null) {
+            return null;
+        }
+        return TagDTO.builder()
+                .tagId((String) map.get("tagId"))
+                .name((String) map.get("tagName"))
+                .type((Integer) map.get("tagType"))
+                .build();
+    }
 }

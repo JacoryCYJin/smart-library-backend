@@ -29,4 +29,20 @@ public interface CategoryMapper {
      * @return 分类信息
      */
     Category selectByCategoryId(@Param("categoryId") String categoryId);
+
+    /**
+     * 根据资源ID查询关联的分类（仅一级分类）
+     * 
+     * @param resourceId 资源业务ID
+     * @return 分类实体列表
+     */
+    List<Category> selectCategoriesByResourceId(@Param("resourceId") String resourceId);
+
+    /**
+     * 根据资源ID查询完整分类层级路径
+     * 
+     * @param resourceId 资源业务ID
+     * @return 分类实体列表（包含所有祖先节点）
+     */
+    List<Category> selectCategoryPathsByResourceId(@Param("resourceId") String resourceId);
 }

@@ -56,6 +56,13 @@ public class CategoryDTO {
     private LocalDateTime mtime;
 
     /**
+     * 获取父分类ID（别名方法，用于兼容）
+     */
+    public String getParentId() {
+        return parentCategoryId;
+    }
+
+    /**
      * 从实体类转换为 DTO
      */
     public static CategoryDTO fromEntity(Category category) {

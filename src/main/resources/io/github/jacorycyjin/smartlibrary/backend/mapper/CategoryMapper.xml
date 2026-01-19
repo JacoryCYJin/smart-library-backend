@@ -33,4 +33,40 @@
         WHERE category_id = #{categoryId}
           AND deleted = 0
     </select>
+
+    <!-- 根据资源ID查询关联的分类（仅一级分类） -->
+    <select id="selectCategoriesByResourceId" resultMap="CategoryResultMap">
+        SELECT
+            c.*
+        FROM category c
+                 INNER JOIN resource_category_rel rcr ON c.category_id = rcr.category_id
+        WHERE rcr.resource_id = #{resourceId}
+          AND c.deleted = 0
+        ORDER BY c.sort_order
+    </select>
+
+    <!-- 根据资源ID查询完整分类层级路径（递归查询所有祖先节点） -->
+    <select id="selectCategoryPathsByResourceId" resultMap="CategoryResultMap">
+        WITH RECURSIVE category_tree AS (
+            -- 查询资源直接关联的分类（叶子节点）
+            SELECT
+                c.*
+            FROM category c
+                     INNER JOIN resource_category_rel rcr ON c.category_id = rcr.category_id
+            WHERE rcr.resource_id = #{resourceId}
+              AND c.deleted = 0
+
+            UNION ALL
+
+            -- 递归查询父分类
+            SELECT
+                c.*
+            FROM category c
+                     INNER JOIN category_tree ct ON c.category_id = ct.parent_category_id
+            WHERE c.deleted = 0
+        )
+        SELECT *
+        FROM category_tree
+        ORDER BY level, category_id
+    </select>
 </mapper>
