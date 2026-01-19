@@ -26,9 +26,9 @@ public class UserBrowseHistoryDTO {
     private String userId;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 浏览次数
@@ -36,12 +36,7 @@ public class UserBrowseHistoryDTO {
     private Integer viewCount;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime ctime;
-
-    /**
-     * 更新时间（最后浏览时间）
+     * 最后浏览时间
      */
     private LocalDateTime mtime;
 
@@ -54,9 +49,8 @@ public class UserBrowseHistoryDTO {
         }
         return UserBrowseHistoryDTO.builder()
                 .userId(history.getUserId())
-                .bookId(history.getBookId())
+                .resourceId(history.getResourceId())
                 .viewCount(history.getViewCount())
-                .ctime(history.getCtime())
                 .mtime(history.getMtime())
                 .build();
     }

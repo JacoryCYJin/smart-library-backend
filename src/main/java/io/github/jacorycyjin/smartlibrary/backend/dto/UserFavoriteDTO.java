@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * 用户收藏 DTO
  * 
  * @author Jacory
- * @date 2025/12/28
+ * @date 2025/01/19
  */
 @AllArgsConstructor
 @Data
@@ -26,19 +26,14 @@ public class UserFavoriteDTO {
     private String userId;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 创建时间
      */
     private LocalDateTime ctime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime mtime;
 
     /**
      * 从实体类转换为 DTO
@@ -49,9 +44,8 @@ public class UserFavoriteDTO {
         }
         return UserFavoriteDTO.builder()
                 .userId(favorite.getUserId())
-                .bookId(favorite.getBookId())
+                .resourceId(favorite.getResourceId())
                 .ctime(favorite.getCtime())
-                .mtime(favorite.getMtime())
                 .build();
     }
 }

@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import java.time.LocalDateTime;
 
 /**
- * 用户浏览历史实体类（Item-CF数据源）
+ * 资源-分类关联实体类
  * 
  * @author Jacory
  * @date 2025/01/19
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Builder
-public class UserBrowseHistory {
+public class ResourceCategoryRel {
 
     /**
      * 主键ID，自增
@@ -24,22 +23,12 @@ public class UserBrowseHistory {
     private Long id;
 
     /**
-     * 用户ID
-     */
-    private String userId;
-
-    /**
      * 资源ID
      */
     private String resourceId;
 
     /**
-     * 浏览次数
+     * 分类ID
      */
-    private Integer viewCount;
-
-    /**
-     * 最后浏览时间
-     */
-    private LocalDateTime mtime;
+    private String categoryId;
 }

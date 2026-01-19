@@ -1,6 +1,7 @@
 package io.github.jacorycyjin.smartlibrary.backend.common.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.PageUtils;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.BaseSerial;
@@ -10,6 +11,7 @@ import java.util.List;
 
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class PageDTO<T> extends BaseSerial {
 

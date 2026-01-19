@@ -1,6 +1,7 @@
 package io.github.jacorycyjin.smartlibrary.backend.common.form;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.BaseSerial;
 import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageQueryDTO;
 
@@ -9,6 +10,7 @@ import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageQueryDTO;
  * 接收前端驼峰参数 (CamelCase)
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PageQueryForm extends BaseSerial {
     
     /**

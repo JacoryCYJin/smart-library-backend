@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * 图书评论与评分 DTO
  * 
  * @author Jacory
- * @date 2025/12/28
+ * @date 2025/01/19
  */
 @AllArgsConstructor
 @Data
@@ -27,9 +27,9 @@ public class CommentDTO {
     private String userId;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 评论内容
@@ -75,7 +75,7 @@ public class CommentDTO {
         }
         return CommentDTO.builder()
                 .userId(comment.getUserId())
-                .bookId(comment.getBookId())
+                .resourceId(comment.getResourceId())
                 .content(comment.getContent())
                 .score(comment.getScore())
                 .likeCount(comment.getLikeCount())

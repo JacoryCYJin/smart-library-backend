@@ -30,9 +30,9 @@ public class Comment {
     private String userId;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 评论内容

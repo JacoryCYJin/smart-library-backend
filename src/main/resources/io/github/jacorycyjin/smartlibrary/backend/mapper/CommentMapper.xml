@@ -6,7 +6,7 @@
     <resultMap id="CommentResultMap" type="io.github.jacorycyjin.smartlibrary.backend.entity.Comment">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
-        <result column="book_id" property="bookId"/>
+        <result column="resource_id" property="resourceId"/>
         <result column="content" property="content"/>
         <result column="score" property="score"/>
         <result column="like_count" property="likeCount"/>
@@ -17,21 +17,21 @@
         <result column="deleted" property="deleted"/>
     </resultMap>
 
-    <!-- 根据图书ID查询已通过审核的评论列表（支持分页） -->
-    <select id="selectByBookId" resultMap="CommentResultMap">
+    <!-- 根据资源ID查询已通过审核的评论列表（支持分页） -->
+    <select id="selectByResourceId" resultMap="CommentResultMap">
         SELECT *
         FROM comment
-        WHERE book_id = #{bookId}
+        WHERE resource_id = #{resourceId}
           AND audit_status = 1
           AND deleted = 0
         ORDER BY ctime DESC
     </select>
 
-    <!-- 统计图书的评论总数 -->
-    <select id="countByBookId" resultType="int">
+    <!-- 统计资源的评论总数 -->
+    <select id="countByResourceId" resultType="int">
         SELECT COUNT(*)
         FROM comment
-        WHERE book_id = #{bookId}
+        WHERE resource_id = #{resourceId}
           AND audit_status = 1
           AND deleted = 0
     </select>

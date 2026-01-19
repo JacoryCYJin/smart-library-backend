@@ -26,9 +26,9 @@ public class UserBrowseHistoryVO {
     private String userId;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 浏览次数
@@ -36,12 +36,7 @@ public class UserBrowseHistoryVO {
     private Integer viewCount;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime ctime;
-
-    /**
-     * 更新时间（最后浏览时间）
+     * 最后浏览时间
      */
     private LocalDateTime mtime;
 
@@ -54,9 +49,8 @@ public class UserBrowseHistoryVO {
         }
         return UserBrowseHistoryVO.builder()
                 .userId(dto.getUserId())
-                .bookId(dto.getBookId())
+                .resourceId(dto.getResourceId())
                 .viewCount(dto.getViewCount())
-                .ctime(dto.getCtime())
                 .mtime(dto.getMtime())
                 .build();
     }

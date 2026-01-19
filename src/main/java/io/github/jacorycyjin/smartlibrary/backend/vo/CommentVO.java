@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 图书评论与评分 VO
  * 
  * @author Jacory
- * @date 2025/12/28
+ * @date 2025/01/19
  */
 @AllArgsConstructor
 @Data
@@ -39,9 +39,9 @@ public class CommentVO {
     private String avatarUrl;
 
     /**
-     * 图书ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
      * 评论内容
@@ -87,7 +87,7 @@ public class CommentVO {
         }
         return CommentVO.builder()
                 .userId(dto.getUserId())
-                .bookId(dto.getBookId())
+                .resourceId(dto.getResourceId())
                 .content(dto.getContent())
                 .score(dto.getScore())
                 .likeCount(dto.getLikeCount())
@@ -107,7 +107,7 @@ public class CommentVO {
         }
         return CommentVO.builder()
                 .userId(entity.getUserId())
-                .bookId(entity.getBookId())
+                .resourceId(entity.getResourceId())
                 .content(entity.getContent())
                 .score(entity.getScore())
                 .likeCount(entity.getLikeCount())
@@ -129,7 +129,7 @@ public class CommentVO {
                 .userId(comment.getUserId())
                 .username(user != null ? user.getUsername() : "未知用户")
                 .avatarUrl(user != null ? user.getAvatarUrl() : null)
-                .bookId(comment.getBookId())
+                .resourceId(comment.getResourceId())
                 .content(comment.getContent())
                 .score(comment.getScore())
                 .likeCount(comment.getLikeCount())

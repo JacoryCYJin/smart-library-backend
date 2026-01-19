@@ -9,24 +9,24 @@ import java.util.List;
  * 评论 Mapper
  * 
  * @author Jacory
- * @date 2025/12/31
+ * @date 2025/01/19
  */
 @Mapper
 public interface CommentMapper {
 
     /**
-     * 根据图书ID查询已通过审核的评论列表（支持分页）
+     * 根据资源ID查询已通过审核的评论列表（支持分页）
      * 
-     * @param bookId 图书业务ID
+     * @param resourceId 资源业务ID
      * @return 评论列表（按创建时间倒序）
      */
-    List<Comment> selectByBookId(@Param("bookId") String bookId);
+    List<Comment> selectByResourceId(@Param("resourceId") String resourceId);
 
     /**
-     * 统计图书的评论总数
+     * 统计资源的评论总数
      * 
-     * @param bookId 图书业务ID
+     * @param resourceId 资源业务ID
      * @return 评论总数
      */
-    int countByBookId(@Param("bookId") String bookId);
+    int countByResourceId(@Param("resourceId") String resourceId);
 }

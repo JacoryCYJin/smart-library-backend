@@ -1,6 +1,7 @@
 package io.github.jacorycyjin.smartlibrary.backend.common.vo;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageDTO;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.BaseSerial;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @date 2024/12/16
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PageVO<T> extends BaseSerial{
 
     /**

@@ -1,10 +1,12 @@
 package io.github.jacorycyjin.smartlibrary.backend.common.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.BaseSerial;
 
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PageQueryDTO extends BaseSerial {
 
     private static final int DEFAULT_PAGE_NUM = 1;

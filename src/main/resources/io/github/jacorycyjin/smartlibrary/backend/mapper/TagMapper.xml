@@ -2,21 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.jacorycyjin.smartlibrary.backend.mapper.TagMapper">
 
-    <!-- 批量查询图书的标签信息 -->
-    <select id="selectTagsByBookIds" resultType="map">
+    <!-- 批量查询资源的标签信息 -->
+    <select id="selectTagsByResourceIds" resultType="map">
         SELECT 
-            btr.book_id AS bookId,
+            rtr.resource_id AS resourceId,
             t.tag_id AS tagId,
             t.name AS tagName,
-            t.type AS tagType
-        FROM book_tag_rel btr
-        INNER JOIN tag t ON btr.tag_id = t.tag_id
-        WHERE btr.book_id IN
-        <foreach collection="bookIds" item="id" open="(" separator="," close=")">
+            t.type AS tagType,
+            rtr.weight AS weight
+        FROM resource_tag_rel rtr
+        INNER JOIN tag t ON rtr.tag_id = t.tag_id
+        WHERE rtr.resource_id IN
+        <foreach collection="resourceIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
-        AND btr.deleted = 0
-        AND t.deleted = 0
-        ORDER BY btr.book_id, btr.id
+        ORDER BY rtr.resource_id, rtr.weight DESC, rtr.id
     </select>
 </mapper>

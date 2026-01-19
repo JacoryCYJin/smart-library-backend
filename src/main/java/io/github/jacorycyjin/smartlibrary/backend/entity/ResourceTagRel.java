@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 /**
- * 用户浏览历史实体类（Item-CF数据源）
+ * 资源-标签关联实体类
  * 
  * @author Jacory
  * @date 2025/01/19
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Builder
-public class UserBrowseHistory {
+public class ResourceTagRel {
 
     /**
      * 主键ID，自增
@@ -24,22 +24,17 @@ public class UserBrowseHistory {
     private Long id;
 
     /**
-     * 用户ID
-     */
-    private String userId;
-
-    /**
      * 资源ID
      */
     private String resourceId;
 
     /**
-     * 浏览次数
+     * 标签ID
      */
-    private Integer viewCount;
+    private String tagId;
 
     /**
-     * 最后浏览时间
+     * TF-IDF权重值（核心算法字段）
      */
-    private LocalDateTime mtime;
+    private BigDecimal weight;
 }

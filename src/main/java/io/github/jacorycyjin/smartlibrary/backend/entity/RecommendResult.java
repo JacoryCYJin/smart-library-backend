@@ -4,19 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 图书-作者关联实体类
+ * 推荐结果缓存实体类
  * 
  * @author Jacory
- * @date 2025/12/28
+ * @date 2025/01/19
  */
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Builder
-public class BookAuthorRel {
+public class RecommendResult {
 
     /**
      * 主键ID，自增
@@ -24,37 +25,27 @@ public class BookAuthorRel {
     private Long id;
 
     /**
-     * 图书业务ID
+     * 目标用户
      */
-    private String bookId;
+    private String userId;
 
     /**
-     * 作者业务ID
+     * 推荐资源
      */
-    private String authorId;
+    private String resourceId;
 
     /**
-     * 角色（作者、译者等）
+     * 推荐匹配度
      */
-    private String role;
+    private BigDecimal score;
 
     /**
-     * 排序权重
+     * 推荐理由（如：看了《三体》/ 内容相似）
      */
-    private Integer sortOrder;
+    private String reason;
 
     /**
      * 创建时间
      */
     private LocalDateTime ctime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime mtime;
-
-    /**
-     * 是否删除：0=未删除，1=已删除
-     */
-    private Integer deleted;
 }

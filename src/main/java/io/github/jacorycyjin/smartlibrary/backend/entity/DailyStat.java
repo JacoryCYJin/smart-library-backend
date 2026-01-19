@@ -4,20 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 图书-标签关联实体类
+ * 每日流量统计实体类
  * 
  * @author Jacory
- * @date 2025/12/28
+ * @date 2025/01/19
  */
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Builder
-public class BookTagRel {
+public class DailyStat {
 
     /**
      * 主键ID，自增
@@ -25,32 +25,22 @@ public class BookTagRel {
     private Long id;
 
     /**
-     * 图书业务ID
+     * 资源ID
      */
-    private String bookId;
+    private String resourceId;
 
     /**
-     * 标签业务ID
+     * 统计日期
      */
-    private String tagId;
+    private LocalDate date;
 
     /**
-     * 权重
+     * 当日增量
      */
-    private BigDecimal weight;
+    private Integer viewCount;
 
     /**
      * 创建时间
      */
     private LocalDateTime ctime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime mtime;
-
-    /**
-     * 是否删除：0=未删除，1=已删除
-     */
-    private Integer deleted;
 }
