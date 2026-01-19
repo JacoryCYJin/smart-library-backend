@@ -58,11 +58,7 @@ public class ResourceSearchForm extends PageQueryForm {
 
     /**
      * 排序字段（view_count, comment_count, star_count, pub_date, ctime）
+     * 默认降序排列
      */
     private String sortBy;
-
-    /**
-     * 排序方向（asc, desc）
-     */
-    private String sortOrder;
 }

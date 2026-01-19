@@ -51,7 +51,6 @@ public class ResourceServiceImpl implements ResourceService {
         params.put("publisher", searchForm.getPublisher());
         params.put("journal", searchForm.getJournal());
         params.put("sortBy", searchForm.getSortBy());
-        params.put("sortOrder", searchForm.getSortOrder());
 
         // 分页查询
         PageHelper.startPage(searchForm.getPageNum(), searchForm.getPageSize());

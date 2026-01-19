@@ -105,13 +105,10 @@
                 )
             </if>
         </where>
-        <!-- 排序 -->
+        <!-- 排序（固定降序） -->
         <choose>
             <when test="params.sortBy != null and params.sortBy != ''">
-                ORDER BY ${params.sortBy}
-                <if test="params.sortOrder != null and params.sortOrder != ''">
-                    ${params.sortOrder}
-                </if>
+                ORDER BY ${params.sortBy} DESC
             </when>
             <otherwise>
                 ORDER BY mtime DESC
