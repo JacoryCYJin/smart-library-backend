@@ -18,4 +18,17 @@
         </foreach>
         ORDER BY rtr.resource_id, rtr.weight DESC, rtr.id
     </select>
+
+    <!-- 查询所有标签 -->
+    <select id="selectAll" resultType="map">
+        SELECT 
+            tag_id AS tagId,
+            name,
+            type,
+            ctime,
+            mtime
+        FROM tag
+        WHERE deleted = 0
+        ORDER BY name
+    </select>
 </mapper>

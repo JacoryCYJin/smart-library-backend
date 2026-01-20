@@ -21,4 +21,11 @@ public interface TagMapper {
      * @return 标签信息列表（包含 resourceId, tagId, tagName, tagType, weight）
      */
     List<Map<String, Object>> selectTagsByResourceIds(@Param("resourceIds") List<String> resourceIds);
+
+    /**
+     * 查询所有标签
+     * 
+     * @return 标签列表
+     */
+    List<Map<String, Object>> selectAll();
 }

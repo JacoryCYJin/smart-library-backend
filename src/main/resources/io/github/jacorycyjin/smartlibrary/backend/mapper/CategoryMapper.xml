@@ -69,4 +69,12 @@
         FROM category_tree
         ORDER BY level, category_id
     </select>
+
+    <!-- 查询所有分类 -->
+    <select id="selectAll" resultMap="CategoryResultMap">
+        SELECT *
+        FROM category
+        WHERE deleted = 0
+        ORDER BY sort_order, level, category_id
+    </select>
 </mapper>

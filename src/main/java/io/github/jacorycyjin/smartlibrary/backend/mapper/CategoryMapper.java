@@ -45,4 +45,11 @@ public interface CategoryMapper {
      * @return 分类实体列表（包含所有祖先节点）
      */
     List<Category> selectCategoryPathsByResourceId(@Param("resourceId") String resourceId);
+
+    /**
+     * 查询所有分类
+     * 
+     * @return 分类列表
+     */
+    List<Category> selectAll();
 }
