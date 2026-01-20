@@ -1,7 +1,5 @@
 package io.github.jacorycyjin.smartlibrary.backend.vo;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +21,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ResourceDetailVO extends ResourcePublicVO {
 
     // ========== 图书特有字段 ==========

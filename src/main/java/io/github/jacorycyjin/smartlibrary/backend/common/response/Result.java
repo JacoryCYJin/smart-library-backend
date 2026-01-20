@@ -3,8 +3,6 @@ package io.github.jacorycyjin.smartlibrary.backend.common.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
 import io.github.jacorycyjin.smartlibrary.backend.common.util.BaseSerial;
 import lombok.Data;
@@ -21,7 +19,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Result<T> extends BaseSerial {
 
     /**
