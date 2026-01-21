@@ -77,4 +77,25 @@
         WHERE deleted = 0
         ORDER BY sort_order, level, category_id
     </select>
+
+    <!-- 查询指定分类及其所有子分类的ID列表（递归） -->
+    <select id="selectDescendantIds" resultType="string">
+        WITH RECURSIVE category_descendants AS (
+            -- 查询当前分类（自身）
+            SELECT category_id
+            FROM category
+            WHERE category_id = #{categoryId}
+              AND deleted = 0
+
+            UNION ALL
+
+            -- 递归查询所有子分类（注意：数据库字段是 parent_id）
+            SELECT c.category_id
+            FROM category c
+            INNER JOIN category_descendants cd ON c.parent_id = cd.category_id
+            WHERE c.deleted = 0
+        )
+        SELECT category_id
+        FROM category_descendants
+    </select>
 </mapper>

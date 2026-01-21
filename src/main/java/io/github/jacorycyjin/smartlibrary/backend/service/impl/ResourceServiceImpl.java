@@ -3,6 +3,7 @@ package io.github.jacorycyjin.smartlibrary.backend.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageDTO;
+import io.github.jacorycyjin.smartlibrary.backend.common.dto.PageQueryDTO;
 import io.github.jacorycyjin.smartlibrary.backend.common.enums.ApiCode;
 import io.github.jacorycyjin.smartlibrary.backend.common.exception.BusinessException;
 import io.github.jacorycyjin.smartlibrary.backend.dto.CategoryDTO;
@@ -41,19 +42,26 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public PageDTO<ResourceDTO> searchResources(ResourceSearchForm searchForm) {
+        // 校验并设置分页参数默认值（必须使用返回的 DTO）
+        PageQueryDTO pageQuery = searchForm.toPageQueryDTO();
+        
         // 构建查询参数
         Map<String, Object> params = new HashMap<>();
         params.put("type", searchForm.getType());
         params.put("keyword", searchForm.getKeyword());
-        params.put("categoryIds", searchForm.getCategoryIds());
+        
+        // 展开分类ID：如果传入的是父分类，需要查询所有子分类
+        List<String> expandedCategoryIds = expandCategoryIds(searchForm.getCategoryIds());
+        params.put("categoryIds", expandedCategoryIds);
+        
         params.put("tagIds", searchForm.getTagIds());
         params.put("authorName", searchForm.getAuthorName());
         params.put("publisher", searchForm.getPublisher());
         params.put("journal", searchForm.getJournal());
         params.put("sortBy", searchForm.getSortBy());
 
-        // 分页查询
-        PageHelper.startPage(searchForm.getPageNum(), searchForm.getPageSize());
+        // 分页查询（使用校验后的分页参数）
+        PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize());
         List<Resource> resources = resourceMapper.searchResources(params);
         PageInfo<Resource> pageInfo = new PageInfo<>(resources);
 
@@ -63,11 +71,29 @@ public class ResourceServiceImpl implements ResourceService {
                 .toList();
 
         return new PageDTO<>(
-                searchForm.getPageNum(),
+                pageQuery.getPageNum(),
                 (int) pageInfo.getTotal(),
-                searchForm.getPageSize(),
+                pageQuery.getPageSize(),
                 resourceDTOs
         );
+    }
+
+    /**
+     * 展开分类ID：将父分类展开为包含所有子分类的ID列表
+     * 
+     * @param categoryIds 原始分类ID列表
+     * @return 展开后的分类ID列表（包含所有子分类）
+     */
+    private List<String> expandCategoryIds(List<String> categoryIds) {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return null;
+        }
+        
+        // 对每个分类ID，查询其所有子分类
+        return categoryIds.stream()
+                .flatMap(categoryId -> categoryMapper.selectDescendantIds(categoryId).stream())
+                .distinct()
+                .toList();
     }
 
     @Override
@@ -91,9 +117,14 @@ public class ResourceServiceImpl implements ResourceService {
      * 转换为基础 DTO（用于列表页）
      */
     private ResourceDTO convertToDTO(Resource resource) {
-        // 查询分类（仅一级分类）
+        // 查询分类（直接关联的分类，通常是最子分类）
         List<Category> categories = categoryMapper.selectCategoriesByResourceId(resource.getResourceId());
+        
+        // 只保留 level 最大的分类（最子分类）
         List<CategoryDTO> categoryDTOs = categories.stream()
+                .filter(c -> c.getLevel() != null)
+                .sorted((c1, c2) -> Integer.compare(c2.getLevel(), c1.getLevel())) // 降序
+                .limit(1) // 只取最子分类
                 .map(CategoryDTO::fromEntity)
                 .toList();
 

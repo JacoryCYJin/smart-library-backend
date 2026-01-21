@@ -52,4 +52,12 @@ public interface CategoryMapper {
      * @return 分类列表
      */
     List<Category> selectAll();
+
+    /**
+     * 查询指定分类及其所有子分类的ID列表（递归）
+     * 
+     * @param categoryId 父分类业务ID
+     * @return 分类ID列表（包含自身）
+     */
+    List<String> selectDescendantIds(@Param("categoryId") String categoryId);
 }
