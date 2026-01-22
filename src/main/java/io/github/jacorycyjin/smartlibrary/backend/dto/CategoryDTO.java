@@ -28,7 +28,7 @@ public class CategoryDTO {
     /**
      * 父分类ID
      */
-    private String parentCategoryId;
+    private String parentId;
 
     /**
      * 分类名称
@@ -56,13 +56,6 @@ public class CategoryDTO {
     private LocalDateTime mtime;
 
     /**
-     * 获取父分类ID（别名方法，用于兼容）
-     */
-    public String getParentId() {
-        return parentCategoryId;
-    }
-
-    /**
      * 从实体类转换为 DTO
      */
     public static CategoryDTO fromEntity(Category category) {
@@ -71,7 +64,7 @@ public class CategoryDTO {
         }
         return CategoryDTO.builder()
                 .categoryId(category.getCategoryId())
-                .parentCategoryId(category.getParentCategoryId())
+                .parentId(category.getParentId())
                 .name(category.getName())
                 .level(category.getLevel())
                 .sortOrder(category.getSortOrder())

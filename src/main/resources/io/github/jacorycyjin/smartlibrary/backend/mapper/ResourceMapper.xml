@@ -42,78 +42,72 @@
         view_count, comment_count, star_count, ctime, mtime, deleted
     </sql>
 
-    <!-- 根据资源ID查询 -->
-    <select id="selectByResourceId" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM resource
-        WHERE resource_id = #{resourceId}
-        AND deleted = 0
-    </select>
-
-    <!-- 多条件搜索 -->
-    <select id="searchResources" resultMap="BaseResultMap">
+    <!-- 多条件搜索（支持单个资源ID查询和批量搜索） -->
+    <select id="searchResources" parameterType="map" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM resource
         <where>
             deleted = 0
+            <!-- 单个资源ID查询 -->
+            <if test="resourceId != null and resourceId != ''">
+                AND resource_id = #{resourceId}
+            </if>
             <!-- 资源类型筛选 -->
-            <if test="params.type != null">
-                AND type = #{params.type}
+            <if test="type != null">
+                AND type = #{type}
             </if>
             <!-- 关键词搜索 -->
-            <if test="params.keyword != null and params.keyword != ''">
+            <if test="keyword != null and keyword != ''">
                 AND (
-                title LIKE CONCAT('%', #{params.keyword}, '%')
-                OR author_name LIKE CONCAT('%', #{params.keyword}, '%')
-                OR summary LIKE CONCAT('%', #{params.keyword}, '%')
+                title LIKE CONCAT('%', #{keyword}, '%')
+                OR author_name LIKE CONCAT('%', #{keyword}, '%')
+                OR summary LIKE CONCAT('%', #{keyword}, '%')
                 )
             </if>
             <!-- 作者名称 -->
-            <if test="params.authorName != null and params.authorName != ''">
-                AND author_name LIKE CONCAT('%', #{params.authorName}, '%')
+            <if test="authorName != null and authorName != ''">
+                AND author_name LIKE CONCAT('%', #{authorName}, '%')
             </if>
             <!-- 出版社（仅图书） -->
-            <if test="params.publisher != null and params.publisher != ''">
-                AND publisher LIKE CONCAT('%', #{params.publisher}, '%')
+            <if test="publisher != null and publisher != ''">
+                AND publisher LIKE CONCAT('%', #{publisher}, '%')
             </if>
             <!-- 期刊名称（仅文献） -->
-            <if test="params.journal != null and params.journal != ''">
-                AND journal LIKE CONCAT('%', #{params.journal}, '%')
+            <if test="journal != null and journal != ''">
+                AND journal LIKE CONCAT('%', #{journal}, '%')
             </if>
             <!-- 分类ID筛选 -->
-            <if test="params.categoryIds != null and params.categoryIds.size() > 0">
+            <if test="categoryIds != null and categoryIds.size() > 0">
                 AND resource_id IN (
                 SELECT DISTINCT resource_id
                 FROM resource_category_rel
                 WHERE category_id IN
-                <foreach collection="params.categoryIds" item="categoryId" open="(" separator="," close=")">
+                <foreach collection="categoryIds" item="categoryId" open="(" separator="," close=")">
                     #{categoryId}
                 </foreach>
                 )
             </if>
             <!-- 标签ID筛选 -->
-            <if test="params.tagIds != null and params.tagIds.size() > 0">
+            <if test="tagIds != null and tagIds.size() > 0">
                 AND resource_id IN (
                 SELECT DISTINCT resource_id
                 FROM resource_tag_rel
                 WHERE tag_id IN
-                <foreach collection="params.tagIds" item="tagId" open="(" separator="," close=")">
+                <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
                     #{tagId}
                 </foreach>
                 )
             </if>
         </where>
         <!-- 排序（固定降序） -->
-        <choose>
-            <when test="params.sortBy != null and params.sortBy != ''">
-                ORDER BY ${params.sortBy} DESC
-            </when>
-            <otherwise>
-                ORDER BY mtime DESC
-            </otherwise>
-        </choose>
+        <if test="sortBy != null and sortBy != ''">
+            ORDER BY ${sortBy} DESC
+        </if>
+        <!-- 查询数量限制 -->
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <!-- 统计搜索结果 -->

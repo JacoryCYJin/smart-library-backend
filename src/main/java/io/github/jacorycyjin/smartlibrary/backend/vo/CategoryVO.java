@@ -29,7 +29,7 @@ public class CategoryVO {
     /**
      * 父分类ID
      */
-    private String parentCategoryId;
+    private String parentId;
 
     /**
      * 分类名称
@@ -65,7 +65,7 @@ public class CategoryVO {
         }
         return CategoryVO.builder()
                 .categoryId(dto.getCategoryId())
-                .parentCategoryId(dto.getParentCategoryId())
+                .parentId(dto.getParentId())
                 .name(dto.getName())
                 .level(dto.getLevel())
                 .sortOrder(dto.getSortOrder())
@@ -83,7 +83,7 @@ public class CategoryVO {
         }
         return CategoryVO.builder()
                 .categoryId(entity.getCategoryId())
-                .parentCategoryId(entity.getParentCategoryId())
+                .parentId(entity.getParentId())
                 .name(entity.getName())
                 .level(entity.getLevel())
                 .sortOrder(entity.getSortOrder())

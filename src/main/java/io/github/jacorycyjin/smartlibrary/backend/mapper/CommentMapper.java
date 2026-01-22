@@ -29,4 +29,28 @@ public interface CommentMapper {
      * @return 评论总数
      */
     int countByResourceId(@Param("resourceId") String resourceId);
+
+    /**
+     * 根据ID查询评论
+     * 
+     * @param id 评论ID
+     * @return 评论实体
+     */
+    Comment selectById(@Param("id") Long id);
+
+    /**
+     * 插入评论
+     * 
+     * @param comment 评论实体
+     * @return 影响行数
+     */
+    int insert(Comment comment);
+
+    /**
+     * 逻辑删除评论
+     * 
+     * @param id 评论ID
+     * @return 影响行数
+     */
+    int deleteById(@Param("id") Long id);
 }

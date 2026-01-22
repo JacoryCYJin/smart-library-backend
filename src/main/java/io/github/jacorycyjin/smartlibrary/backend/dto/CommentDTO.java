@@ -27,6 +27,16 @@ public class CommentDTO {
     private String userId;
 
     /**
+     * 用户名（关联查询）
+     */
+    private String username;
+
+    /**
+     * 用户头像（关联查询）
+     */
+    private String avatarUrl;
+
+    /**
      * 资源ID
      */
     private String resourceId;

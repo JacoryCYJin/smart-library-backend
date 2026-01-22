@@ -31,7 +31,7 @@ public class Category {
     /**
      * 父分类ID
      */
-    private String parentCategoryId;
+    private String parentId;
 
     /**
      * 分类名称

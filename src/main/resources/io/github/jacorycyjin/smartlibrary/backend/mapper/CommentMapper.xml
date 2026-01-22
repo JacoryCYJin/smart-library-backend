@@ -35,4 +35,25 @@
           AND audit_status = 1
           AND deleted = 0
     </select>
+
+    <!-- 根据ID查询评论 -->
+    <select id="selectById" resultMap="CommentResultMap">
+        SELECT *
+        FROM comment
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+    <!-- 插入评论 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment (user_id, resource_id, content, score, like_count, audit_status, ctime, deleted)
+        VALUES (#{userId}, #{resourceId}, #{content}, #{score}, #{likeCount}, #{auditStatus}, #{ctime}, #{deleted})
+    </insert>
+
+    <!-- 逻辑删除评论 -->
+    <update id="deleteById">
+        UPDATE comment
+        SET deleted = 1
+        WHERE id = #{id}
+    </update>
 </mapper>

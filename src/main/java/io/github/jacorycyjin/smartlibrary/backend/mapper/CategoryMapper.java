@@ -4,6 +4,7 @@ import io.github.jacorycyjin.smartlibrary.backend.entity.Category;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分类 Mapper
@@ -15,20 +16,18 @@ import java.util.List;
 public interface CategoryMapper {
 
     /**
-     * 根据业务ID列表批量查询分类
+     * 通用查询分类方法（支持多条件动态查询）
      * 
-     * @param categoryIds 分类业务ID列表（对应 category 表的 category_id 字段）
+     * @param params 查询参数 Map
+     *               - categoryId: 单个分类业务ID
+     *               - categoryIds: 分类业务ID列表
+     *               - parentId: 父分类ID
+     *               - level: 层级
+     *               - deleted: 是否删除（默认0）
+     *               - limit: 查询数量限制
      * @return 分类列表
      */
-    List<Category> selectByCategoryIds(@Param("categoryIds") List<String> categoryIds);
-
-    /**
-     * 根据分类业务ID查询单个分类
-     * 
-     * @param categoryId 分类业务ID
-     * @return 分类信息
-     */
-    Category selectByCategoryId(@Param("categoryId") String categoryId);
+    List<Category> searchCategories(Map<String, Object> params);
 
     /**
      * 根据资源ID查询关联的分类（仅一级分类）
@@ -45,13 +44,6 @@ public interface CategoryMapper {
      * @return 分类实体列表（包含所有祖先节点）
      */
     List<Category> selectCategoryPathsByResourceId(@Param("resourceId") String resourceId);
-
-    /**
-     * 查询所有分类
-     * 
-     * @return 分类列表
-     */
-    List<Category> selectAll();
 
     /**
      * 查询指定分类及其所有子分类的ID列表（递归）

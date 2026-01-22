@@ -17,28 +17,22 @@ import java.util.Map;
 public interface ResourceMapper {
 
     /**
-     * 根据资源ID查询
+     * 通用搜索资源方法（支持多条件动态查询）
      * 
-     * @param resourceId 资源业务ID
-     * @return 资源实体
-     */
-    Resource selectByResourceId(@Param("resourceId") String resourceId);
-
-    /**
-     * 多条件搜索资源（支持分页）
-     * 
-     * @param params 查询参数
+     * @param params 查询参数 Map
+     *               - resourceId: 单个资源业务ID
+     *               - type: 资源类型
+     *               - keyword: 关键词（标题、作者、摘要）
+     *               - authorName: 作者名称
+     *               - publisher: 出版社
+     *               - journal: 期刊名称
+     *               - categoryIds: 分类ID列表
+     *               - tagIds: 标签ID列表
+     *               - sortBy: 排序字段
+     *               - limit: 查询数量限制
      * @return 资源列表
      */
-    List<Resource> searchResources(@Param("params") Map<String, Object> params);
-
-    /**
-     * 统计搜索结果数量
-     * 
-     * @param params 查询参数
-     * @return 总数
-     */
-    int countResources(@Param("params") Map<String, Object> params);
+    List<Resource> searchResources(Map<String, Object> params);
 
     /**
      * 插入资源

@@ -6,7 +6,6 @@ import io.github.jacorycyjin.smartlibrary.backend.service.TagService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,25 +22,19 @@ public class TagServiceImpl implements TagService {
     @Resource
     private TagMapper tagMapper;
 
+    /**
+     * 获取所有标签列表
+     * 
+     * @return 标签DTO列表
+     */
     @Override
     public List<TagDTO> getAllTags() {
+        // 查询所有标签（返回 Map 格式）
         List<Map<String, Object>> tags = tagMapper.selectAll();
         
+        // 使用 DTO 自带的 fromMap 方法转换
         return tags.stream()
-                .map(this::convertToDTO)
+                .map(TagDTO::fromMap)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Map 转 DTO
-     */
-    private TagDTO convertToDTO(Map<String, Object> map) {
-        return TagDTO.builder()
-                .tagId((String) map.get("tagId"))
-                .name((String) map.get("name"))
-                .type((Integer) map.get("type"))
-                .ctime(map.get("ctime") != null ? ((Timestamp) map.get("ctime")).toLocalDateTime() : null)
-                .mtime(map.get("mtime") != null ? ((Timestamp) map.get("mtime")).toLocalDateTime() : null)
-                .build();
     }
 }

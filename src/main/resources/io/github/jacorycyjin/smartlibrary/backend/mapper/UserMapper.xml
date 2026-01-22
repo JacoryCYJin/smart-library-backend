@@ -60,11 +60,15 @@
     <select id="selectByUserIds" resultMap="UserResultMap">
         SELECT id, user_id, username, avatar_url, role, status, ctime, mtime, deleted
         FROM user
-        WHERE user_id IN
-        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
-            #{userId}
-        </foreach>
-        AND deleted = 0
+        <where>
+            <if test="userIds != null and userIds.size() > 0">
+                user_id IN
+                <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+            AND deleted = 0
+        </where>
     </select>
 
 </mapper>

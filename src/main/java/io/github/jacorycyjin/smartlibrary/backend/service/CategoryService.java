@@ -18,4 +18,12 @@ public interface CategoryService {
      * @return 分类DTO列表
      */
     List<CategoryDTO> getAllCategories();
+
+    /**
+     * 展开分类ID列表：将父分类展开为包含所有子分类的ID列表
+     * 
+     * @param categoryIds 原始分类ID列表
+     * @return 展开后的分类ID列表（包含所有子分类）
+     */
+    List<String> expandCategoryIds(List<String> categoryIds);
 }

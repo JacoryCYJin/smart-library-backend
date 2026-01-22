@@ -2,6 +2,11 @@ package io.github.jacorycyjin.smartlibrary.backend.converter;
 
 import io.github.jacorycyjin.smartlibrary.backend.dto.CategoryDTO;
 import io.github.jacorycyjin.smartlibrary.backend.dto.ResourceDTO;
+import io.github.jacorycyjin.smartlibrary.backend.dto.TagDTO;
+import io.github.jacorycyjin.smartlibrary.backend.entity.Category;
+import io.github.jacorycyjin.smartlibrary.backend.entity.Resource;
+import io.github.jacorycyjin.smartlibrary.backend.mapper.CategoryMapper;
+import io.github.jacorycyjin.smartlibrary.backend.mapper.TagMapper;
 import io.github.jacorycyjin.smartlibrary.backend.vo.CategoryVO;
 import io.github.jacorycyjin.smartlibrary.backend.vo.ResourceDetailVO;
 import io.github.jacorycyjin.smartlibrary.backend.vo.ResourcePublicVO;
@@ -13,12 +18,83 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 资源转换器（处理复杂的 DTO -> VO 转换）
+ * 资源转换器（处理复杂的 Entity -> DTO 和 DTO -> VO 转换）
  * 
  * @author Jacory
  * @date 2025/01/19
  */
 public class ResourceConverter {
+
+    /**
+     * 转换为基础 DTO（用于列表页）
+     * 
+     * @param resource 资源实体
+     * @param categoryMapper 分类 Mapper
+     * @param tagMapper 标签 Mapper
+     * @return 资源 DTO
+     */
+    public static ResourceDTO toDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper) {
+        if (resource == null) {
+            return null;
+        }
+
+        // 查询分类（直接关联的分类，通常是最子分类）
+        List<Category> categories = categoryMapper.selectCategoriesByResourceId(resource.getResourceId());
+        
+        // 只保留 level 最大的分类（最子分类）
+        List<CategoryDTO> categoryDTOs = categories.stream()
+                .filter(c -> c.getLevel() != null)
+                .sorted((c1, c2) -> Integer.compare(c2.getLevel(), c1.getLevel())) // 降序
+                .limit(1) // 只取最子分类
+                .map(CategoryDTO::fromEntity)
+                .toList();
+
+        // 查询标签
+        List<Map<String, Object>> tagMaps = tagMapper.selectTagsByResourceIds(List.of(resource.getResourceId()));
+        List<TagDTO> tags = tagMaps.stream()
+                .map(TagDTO::fromMap)
+                .toList();
+
+        // 转换为 DTO
+        ResourceDTO dto = ResourceDTO.fromEntity(resource);
+        dto.setCategories(categoryDTOs);
+        dto.setTags(tags);
+        
+        return dto;
+    }
+
+    /**
+     * 转换为详情 DTO（用于详情页，包含完整分类层级）
+     * 
+     * @param resource 资源实体
+     * @param categoryMapper 分类 Mapper
+     * @param tagMapper 标签 Mapper
+     * @return 资源 DTO
+     */
+    public static ResourceDTO toDetailDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper) {
+        if (resource == null) {
+            return null;
+        }
+
+        // 查询完整分类层级
+        List<Category> categoryPaths = categoryMapper.selectCategoryPathsByResourceId(resource.getResourceId());
+        List<CategoryDTO> categoryDTOs = categoryPaths.stream()
+                .map(CategoryDTO::fromEntity)
+                .toList();
+
+        // 查询所有标签
+        List<Map<String, Object>> tagMaps = tagMapper.selectTagsByResourceIds(List.of(resource.getResourceId()));
+        List<TagDTO> tags = tagMaps.stream()
+                .map(TagDTO::fromMap)
+                .toList();
+
+        // 转换为 DTO
+        ResourceDTO dto = ResourceDTO.fromEntity(resource);
+        dto.setCategories(categoryDTOs);
+        dto.setTags(tags);
+        
+        return dto;
+    }
 
     /**
      * 将 ResourceDTO 转换为 ResourceDetailVO（包含完整分类层级）
@@ -60,6 +136,7 @@ public class ResourceConverter {
                 .viewCount(publicVO.getViewCount())
                 .commentCount(publicVO.getCommentCount())
                 .starCount(publicVO.getStarCount())
+                .categoryNames(publicVO.getCategoryNames()) // 添加分类名称
                 .tags(tags)
                 // DetailVO 特有字段
                 .isbn(dto.getIsbn())

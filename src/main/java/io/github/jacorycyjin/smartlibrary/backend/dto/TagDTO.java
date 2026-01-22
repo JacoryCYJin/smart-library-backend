@@ -63,15 +63,45 @@ public class TagDTO {
 
     /**
      * 从 Map 转换为 DTO（用于 MyBatis 查询结果）
+     * 
+     * @param map MyBatis 查询结果
+     * @return TagDTO
      */
     public static TagDTO fromMap(java.util.Map<String, Object> map) {
         if (map == null) {
             return null;
         }
-        return TagDTO.builder()
+        
+        TagDTO.TagDTOBuilder builder = TagDTO.builder()
                 .tagId((String) map.get("tagId"))
-                .name((String) map.get("tagName"))
-                .type((Integer) map.get("tagType"))
-                .build();
+                .type((Integer) map.get("tagType"));
+        
+        // 处理 name 字段（可能是 name 或 tagName）
+        if (map.containsKey("tagName")) {
+            builder.name((String) map.get("tagName"));
+        } else if (map.containsKey("name")) {
+            builder.name((String) map.get("name"));
+        }
+        
+        // 处理时间字段（如果存在）
+        if (map.containsKey("ctime") && map.get("ctime") != null) {
+            Object ctime = map.get("ctime");
+            if (ctime instanceof java.sql.Timestamp) {
+                builder.ctime(((java.sql.Timestamp) ctime).toLocalDateTime());
+            } else if (ctime instanceof LocalDateTime) {
+                builder.ctime((LocalDateTime) ctime);
+            }
+        }
+        
+        if (map.containsKey("mtime") && map.get("mtime") != null) {
+            Object mtime = map.get("mtime");
+            if (mtime instanceof java.sql.Timestamp) {
+                builder.mtime(((java.sql.Timestamp) mtime).toLocalDateTime());
+            } else if (mtime instanceof LocalDateTime) {
+                builder.mtime((LocalDateTime) mtime);
+            }
+        }
+        
+        return builder.build();
     }
 }
