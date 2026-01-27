@@ -44,9 +44,14 @@ public class ResourceDTO {
     private String subTitle;
 
     /**
-     * 作者名称快照
+     * 作者名称快照（冗余字段，用于快速展示第一作者）
      */
     private String authorName;
+
+    /**
+     * 作者列表（完整作者信息，按 sort 排序）
+     */
+    private List<AuthorDTO> authors;
 
     /**
      * 封面URL

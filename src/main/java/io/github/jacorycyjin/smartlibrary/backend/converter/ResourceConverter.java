@@ -1,10 +1,12 @@
 package io.github.jacorycyjin.smartlibrary.backend.converter;
 
+import io.github.jacorycyjin.smartlibrary.backend.dto.AuthorDTO;
 import io.github.jacorycyjin.smartlibrary.backend.dto.CategoryDTO;
 import io.github.jacorycyjin.smartlibrary.backend.dto.ResourceDTO;
 import io.github.jacorycyjin.smartlibrary.backend.dto.TagDTO;
 import io.github.jacorycyjin.smartlibrary.backend.entity.Category;
 import io.github.jacorycyjin.smartlibrary.backend.entity.Resource;
+import io.github.jacorycyjin.smartlibrary.backend.mapper.AuthorMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.CategoryMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.TagMapper;
 import io.github.jacorycyjin.smartlibrary.backend.vo.CategoryVO;
@@ -31,9 +33,10 @@ public class ResourceConverter {
      * @param resource 资源实体
      * @param categoryMapper 分类 Mapper
      * @param tagMapper 标签 Mapper
+     * @param authorMapper 作者 Mapper
      * @return 资源 DTO
      */
-    public static ResourceDTO toDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper) {
+    public static ResourceDTO toDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper, AuthorMapper authorMapper) {
         if (resource == null) {
             return null;
         }
@@ -55,23 +58,31 @@ public class ResourceConverter {
                 .map(TagDTO::fromMap)
                 .toList();
 
+        // 查询作者（按 sort 排序）
+        List<Map<String, Object>> authorMaps = authorMapper.selectAuthorsByResourceId(resource.getResourceId());
+        List<AuthorDTO> authors = authorMaps.stream()
+                .map(AuthorDTO::fromMap)
+                .toList();
+
         // 转换为 DTO
         ResourceDTO dto = ResourceDTO.fromEntity(resource);
         dto.setCategories(categoryDTOs);
         dto.setTags(tags);
+        dto.setAuthors(authors);
         
         return dto;
     }
 
     /**
-     * 转换为详情 DTO（用于详情页，包含完整分类层级）
+     * 转换为详情 DTO（用于详情页，包含完整分类层级和所有作者）
      * 
      * @param resource 资源实体
      * @param categoryMapper 分类 Mapper
      * @param tagMapper 标签 Mapper
+     * @param authorMapper 作者 Mapper
      * @return 资源 DTO
      */
-    public static ResourceDTO toDetailDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper) {
+    public static ResourceDTO toDetailDTO(Resource resource, CategoryMapper categoryMapper, TagMapper tagMapper, AuthorMapper authorMapper) {
         if (resource == null) {
             return null;
         }
@@ -88,10 +99,17 @@ public class ResourceConverter {
                 .map(TagDTO::fromMap)
                 .toList();
 
+        // 查询所有作者（按 sort 排序）
+        List<Map<String, Object>> authorMaps = authorMapper.selectAuthorsByResourceId(resource.getResourceId());
+        List<AuthorDTO> authors = authorMaps.stream()
+                .map(AuthorDTO::fromMap)
+                .toList();
+
         // 转换为 DTO
         ResourceDTO dto = ResourceDTO.fromEntity(resource);
         dto.setCategories(categoryDTOs);
         dto.setTags(tags);
+        dto.setAuthors(authors);
         
         return dto;
     }

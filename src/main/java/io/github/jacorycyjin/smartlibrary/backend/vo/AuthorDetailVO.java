@@ -1,35 +1,24 @@
 package io.github.jacorycyjin.smartlibrary.backend.vo;
 
 import io.github.jacorycyjin.smartlibrary.backend.dto.AuthorDTO;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 作者信息 VO
+ * 作者详情 VO
  * 
  * @author Jacory
  * @date 2025/12/28
  */
-@AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 @SuperBuilder
 public class AuthorDetailVO extends AuthorPublicVO {
 
     /**
-     * 来源
+     * 从 DTO 转换为 VO
      */
-    private String sourceOrigin;
-
-    /**
-     * 来源链接
-     */
-    private String sourceUrl;
-
     public static AuthorDetailVO fromDTO(AuthorDTO dto) {
         if (dto == null) {
             return null;
@@ -41,8 +30,7 @@ public class AuthorDetailVO extends AuthorPublicVO {
                 .country(dto.getCountry())
                 .photoUrl(dto.getPhotoUrl())
                 .description(dto.getDescription())
-                .sourceOrigin(dto.getSourceOrigin())
-                .sourceUrl(dto.getSourceUrl())
+                .sort(dto.getSort())
                 .build();
     }
 }

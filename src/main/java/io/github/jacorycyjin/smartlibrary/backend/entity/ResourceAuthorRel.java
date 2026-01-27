@@ -36,4 +36,9 @@ public class ResourceAuthorRel {
      * 角色（作者/译者/编者）
      */
     private String role;
+
+    /**
+     * 排序权重：1为一作，2为二作...
+     */
+    private Integer sort;
 }

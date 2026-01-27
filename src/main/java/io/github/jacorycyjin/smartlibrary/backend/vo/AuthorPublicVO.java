@@ -50,6 +50,11 @@ public class AuthorPublicVO {
     private String description;
 
     /**
+     * 排序权重（1为一作，2为二作...）
+     */
+    private Integer sort;
+
+    /**
      * 从 DTO 转换为 VO
      */
     public static AuthorPublicVO fromDTO(AuthorDTO dto) {
@@ -63,6 +68,7 @@ public class AuthorPublicVO {
                 .country(dto.getCountry())
                 .photoUrl(dto.getPhotoUrl())
                 .description(dto.getDescription())
+                .sort(dto.getSort())
                 .build();
     }
 }

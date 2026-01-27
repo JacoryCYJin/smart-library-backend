@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 作者信息DTO
@@ -50,16 +51,6 @@ public class AuthorDTO {
     private String description;
 
     /**
-     * 来源
-     */
-    private String sourceOrigin;
-
-    /**
-     * 来源链接
-     */
-    private String sourceUrl;
-
-    /**
      * 创建时间
      */
     private LocalDateTime ctime;
@@ -68,6 +59,11 @@ public class AuthorDTO {
      * 更新时间
      */
     private LocalDateTime mtime;
+
+    /**
+     * 排序权重（1为一作，2为二作...）
+     */
+    private Integer sort;
 
     /**
      * 从实体类转换为 DTO
@@ -83,10 +79,26 @@ public class AuthorDTO {
                 .country(author.getCountry())
                 .photoUrl(author.getPhotoUrl())
                 .description(author.getDescription())
-                .sourceOrigin(author.getSourceOrigin())
-                .sourceUrl(author.getSourceUrl())
                 .ctime(author.getCtime())
                 .mtime(author.getMtime())
+                .build();
+    }
+
+    /**
+     * 从 Map 转换为 DTO（用于 MyBatis 查询结果）
+     */
+    public static AuthorDTO fromMap(Map<String, Object> map) {
+        if (map == null) {
+            return null;
+        }
+        return AuthorDTO.builder()
+                .authorId((String) map.get("authorId"))
+                .name((String) map.get("name"))
+                .originalName((String) map.get("originalName"))
+                .country((String) map.get("country"))
+                .photoUrl((String) map.get("photoUrl"))
+                .description((String) map.get("description"))
+                .sort((Integer) map.get("sort"))
                 .build();
     }
 }
