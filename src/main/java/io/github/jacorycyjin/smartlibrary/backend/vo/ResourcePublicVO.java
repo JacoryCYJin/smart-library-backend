@@ -42,14 +42,9 @@ public class ResourcePublicVO {
     private String subTitle;
 
     /**
-     * 作者名称快照（冗余字段，用于快速展示第一作者）
+     * 作者名称快照（冗余字段，用于快速展示，多个作者用逗号分隔，已按 sort 排序）
      */
     private String authorName;
-
-    /**
-     * 作者列表（按 sort 排序）
-     */
-    private List<AuthorPublicVO> authors;
 
     /**
      * 封面URL
@@ -123,20 +118,12 @@ public class ResourcePublicVO {
                 .toList()
             : null;
         
-        // 转换作者
-        List<AuthorPublicVO> authors = dto.getAuthors() != null
-            ? dto.getAuthors().stream()
-                .map(AuthorPublicVO::fromDTO)
-                .toList()
-            : null;
-        
         return ResourcePublicVO.builder()
                 .resourceId(dto.getResourceId())
                 .type(dto.getType())
                 .title(dto.getTitle())
                 .subTitle(dto.getSubTitle())
                 .authorName(dto.getAuthorName())
-                .authors(authors)
                 .coverUrl(dto.getCoverUrl())
                 .pubDate(dto.getPubDate())
                 .publisher(dto.getPublisher())

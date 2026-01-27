@@ -41,4 +41,22 @@
         ORDER BY rel.resource_id, rel.sort ASC
     </select>
 
+    <!-- 根据作者ID查询作者信息 -->
+    <select id="selectAuthorById" resultType="io.github.jacorycyjin.smartlibrary.backend.entity.Author">
+        SELECT 
+            id,
+            author_id AS authorId,
+            name,
+            original_name AS originalName,
+            country,
+            photo_url AS photoUrl,
+            description,
+            ctime,
+            mtime,
+            deleted
+        FROM author
+        WHERE author_id = #{authorId}
+          AND deleted = 0
+    </select>
+
 </mapper>

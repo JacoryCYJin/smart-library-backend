@@ -237,4 +237,18 @@
           AND star_count > 0
     </update>
 
+    <!-- 根据作者ID查询该作者的所有作品 -->
+    <select id="selectResourcesByAuthorId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            r.id, r.resource_id, r.type, r.title, r.sub_title, r.author_name, r.cover_url, r.summary, r.pub_date,
+            r.isbn, r.publisher, r.price, r.page_count, r.doi, r.journal, r.file_url, r.file_type,
+            r.source_origin, r.source_url, r.source_score, r.sentiment_score,
+            r.view_count, r.comment_count, r.star_count, r.ctime, r.mtime, r.deleted
+        FROM resource r
+        INNER JOIN resource_author_rel rel ON r.resource_id = rel.resource_id
+        WHERE rel.author_id = #{authorId}
+          AND r.deleted = 0
+        ORDER BY r.pub_date DESC, r.ctime DESC
+    </select>
+
 </mapper>

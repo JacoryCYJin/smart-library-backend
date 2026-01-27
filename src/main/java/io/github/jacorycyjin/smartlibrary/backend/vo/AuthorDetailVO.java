@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /**
  * 作者详情 VO
  * 
@@ -15,6 +17,16 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public class AuthorDetailVO extends AuthorPublicVO {
+
+    /**
+     * 作品列表
+     */
+    private List<ResourcePublicVO> works;
+
+    /**
+     * 作品数量
+     */
+    private Integer worksCount;
 
     /**
      * 从 DTO 转换为 VO

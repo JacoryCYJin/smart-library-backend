@@ -1,5 +1,6 @@
 package io.github.jacorycyjin.smartlibrary.backend.mapper;
 
+import io.github.jacorycyjin.smartlibrary.backend.entity.Author;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,4 +31,12 @@ public interface AuthorMapper {
      * @return 作者信息列表（包含 resourceId 和 sort 字段）
      */
     List<Map<String, Object>> selectAuthorsByResourceIds(@Param("resourceIds") List<String> resourceIds);
+
+    /**
+     * 根据作者ID查询作者信息
+     * 
+     * @param authorId 作者ID
+     * @return 作者信息
+     */
+    Author selectAuthorById(@Param("authorId") String authorId);
 }

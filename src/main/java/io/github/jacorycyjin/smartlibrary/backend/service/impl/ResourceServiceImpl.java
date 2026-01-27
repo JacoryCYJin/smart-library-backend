@@ -9,7 +9,6 @@ import io.github.jacorycyjin.smartlibrary.backend.common.exception.BusinessExcep
 import io.github.jacorycyjin.smartlibrary.backend.converter.ResourceConverter;
 import io.github.jacorycyjin.smartlibrary.backend.dto.ResourceDTO;
 import io.github.jacorycyjin.smartlibrary.backend.form.ResourceSearchForm;
-import io.github.jacorycyjin.smartlibrary.backend.mapper.AuthorMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.CategoryMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.ResourceMapper;
 import io.github.jacorycyjin.smartlibrary.backend.mapper.TagMapper;
@@ -38,9 +37,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     @jakarta.annotation.Resource
     private TagMapper tagMapper;
-
-    @jakarta.annotation.Resource
-    private AuthorMapper authorMapper;
 
     @jakarta.annotation.Resource
     private CategoryService categoryService;
@@ -78,7 +74,7 @@ public class ResourceServiceImpl implements ResourceService {
 
         // 使用 Converter 转换为 DTO
         List<ResourceDTO> resourceDTOs = resources.stream()
-                .map(resource -> ResourceConverter.toDTO(resource, categoryMapper, tagMapper, authorMapper))
+                .map(resource -> ResourceConverter.toDTO(resource, categoryMapper, tagMapper))
                 .toList();
 
         return new PageDTO<>(
@@ -108,7 +104,7 @@ public class ResourceServiceImpl implements ResourceService {
         }
 
         // 使用 Converter 转换为 DTO（包含完整分类层级和标签）
-        return ResourceConverter.toDetailDTO(resources.get(0), categoryMapper, tagMapper, authorMapper);
+        return ResourceConverter.toDetailDTO(resources.get(0), categoryMapper, tagMapper);
     }
 
     /**

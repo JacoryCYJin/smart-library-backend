@@ -89,4 +89,12 @@ public interface ResourceMapper {
      * @return 影响行数
      */
     int decrementStarCount(@Param("resourceId") String resourceId);
+
+    /**
+     * 根据作者ID查询该作者的所有作品
+     * 
+     * @param authorId 作者ID
+     * @return 资源列表
+     */
+    List<Resource> selectResourcesByAuthorId(@Param("authorId") String authorId);
 }
